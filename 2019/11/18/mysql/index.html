@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>MySql | huakaiMay</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><meta name="generator" content="Hexo 4.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">MySql</h1><a id="logo" href="/.">huakaiMay</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">MySql</h1><div class="post-meta">Nov 18, 2019</div><div class="post-content"><h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><p>MySQL 提供了多种引擎可以支持事务型与非事务型的关系对象库服务</p>
+<p>Mysql优点及特点</p>
+<ul>
+<li>性能卓越服务稳定</li>
+<li>开源，使用成本低。</li>
+<li>支持多种操作系统，提供多种api几口，支持多种开发语言。</li>
+</ul>
+<h3 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">create function function_name(parameter type...) returns type</span><br><span class="line">begin</span><br><span class="line">(sql语句)</span><br><span class="line">return </span><br><span class="line">end;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">exp:</span><br><span class="line">CREATE function changname(name1 varchar(20), name2 varchar(20)) returns varchar(20)</span><br><span class="line">BEGIN</span><br><span class="line">update user set name &#x3D; name1 where name &#x3D; name2;</span><br><span class="line">return &#39;ok&#39;;</span><br><span class="line">end;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h3><ul>
+<li>MyISAM 是 MySQL 官方提供的存储引擎，其特点是支持全文索引，<strong>查询效率比较高</strong>，缺点是不支持事务、使用表级锁。</li>
+<li>InnoDB 在 5.5 版本后成为了 MySQL 的默认存储引擎，特点是支持 ACID 事务、支持崩溃后的安全恢复、支持外键、支持行级锁提高了并发效率。</li>
+<li>TokuDB 是第三方开发的开源存储引擎，有非常快的写速度，支持数据的压缩存储、可以在线添加索引而不影响读写操作。但是因为压缩的原因，TokuDB 非常适合访问频率不高的数据或历史数据归档，不适合大量读取的场景。</li>
+</ul>
+<h4 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h4><h5 id="数据存储"><a href="#数据存储" class="headerlink" title="数据存储"></a>数据存储</h5><p>当 InnoDB 存储数据时，它可以使用不同的行格式进行存储。MySQL 5.7 版本支持以下格式的行存储方式：</p>
+<p><img src="assets/image-20200221110847101.png" alt="image-20200221110847101"></p>
+<p>两种行记录格式 <code>Compact</code> 和 <code>Redundant</code> 在磁盘上按照以下方式存储：</p>
+<p><img src="assets/image-20200221110927222.png" alt="image-20200221110927222"></p>
+<p><code>Compact</code> 和 <code>Redundant</code> 格式最大的不同就是记录格式的第一个部分；在 <code>Compact</code> 中，行记录的第一部分倒序存放了一行数据中列的长度（Length），而 <code>Redundant</code> 中存的是每一列的偏移量（Offset），从总体上上看， <code>Compact</code> 行记录格式相比 <code>Redundant</code> 格式能够减少 <code>20%</code> 的存储空间</p>
+<h5 id="数据页结构"><a href="#数据页结构" class="headerlink" title="数据页结构"></a>数据页结构</h5><p>InnoDB 使用页作为磁盘管理的最小单位；数据在 InnoDB 存储引擎中都是按行存储的，每个 <code>16KB</code> 大小的页中可以存放 <code>2-200</code> 行的记录。</p>
+<h5 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h5><p><a href="https://hadyang.github.io/interview/docs/basic/database/mysql/innodb/index/" target="_blank" rel="noopener">InnoDB</a></p>
+<h3 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h3><p><img src="assets/image-20200221112849568.png" alt="image-20200221112849568"></p>
+<ul>
+<li>表锁开销小，加锁快，不会出现死锁；但是锁的粒度大，发生锁冲突的概率高，并发访问效率比较低。</li>
+<li>行级锁开销大，加锁慢，有可能会出现死锁，不过因为锁定粒度最小，发生锁冲突的概率低，并发访问效率比较高。</li>
+<li>共享锁也就是读锁，其他事务可以读，但不能写。MySQL 可以通过 lock in share mode 语句显示使用共享锁。</li>
+<li>排他锁就是写锁，其他事务不能读取，也不能写。对于 UPDATE、DELETE 和 INSERT 语句，InnoDB 会自动给涉及的数据集加排他锁，或者使用 select for update 显示使用排他锁。</li>
+</ul>
+<h3 id="事物"><a href="#事物" class="headerlink" title="事物"></a>事物</h3><p>数据库事务（简称:事务）是数据库管理系统执行过程中的一个逻辑单位，由一个有限的数据库操作序列构成。事务的使用是数据库管理系统区别文件系统的重要特征之一。</p>
+<p>事务拥有四个重要的特性：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability），人们习惯称之为 ACID 特性。</p>
+<ul>
+<li><p>原子性（Atomicity）</p>
+<p>事务开始后所有操作，要么全部做完，要么全部不做，不可能停滞在中间环节。事务执行过程中出错，会回滚到事务开始前的状态，所有的操作就像没有发生一样。例如，如果一个事务需要新增 100 条记录，但是在新增了 10 条记录之后就失败了，那么数据库将回滚对这 10 条新增的记录。也就是说事务是一个不可分割的整体，就像化学中学过的原子，是物质构成的基本单位。</p>
+</li>
+<li><p>一致性（Consistency）</p>
+<p>指事务将数据库从一种状态转变为另一种一致的的状态。事务开始前和结束后，数据库的完整性约束没有被破坏。例如工号带有唯一属性，如果经过一个修改工号的事务后，工号变的非唯一了，则表明一致性遭到了破坏。</p>
+</li>
+<li><p>隔离性（Isolation）</p>
+<p>要求每个读写事务的对象对其他事务的操作对象能互相分离，即该事务提交前对其他事务不可见。 也可以理解为多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。这指的是在并发环境中，当不同的事务同时操纵相同的数据时，每个事务都有各自的完整数据空间。由并发事务所做的修改必须与任何其他并发事务所做的修改隔离。例如一个用户在更新自己的个人信息的同时，是不能看到系统管理员也在更新该用户的个人信息（此时更新事务还未提交）。</p>
+<p>注：MySQL 通过锁机制来保证事务的隔离性。</p>
+</li>
+<li><p>持久性（Durability）</p>
+<p>事务一旦提交，则其结果就是永久性的。即使发生宕机的故障，数据库也能将数据恢复，也就是说事务完成后，事务对数据库的所有更新将被保存到数据库，不能回滚。这只是从事务本身的角度来保证，排除 RDBMS（关系型数据库管理系统，例如 Oracle、MySQL 等）本身发生的故障。</p>
+<p>注：MySQL 使用 <code>redo log</code> 来保证事务的持久性。</p>
+</li>
+</ul>
+<h4 id="事物隔离级别"><a href="#事物隔离级别" class="headerlink" title="事物隔离级别"></a>事物隔离级别</h4><ul>
+<li>READ UNCOMMITTED（读未提交）：该隔离级别的事务会读到其它未提交事务的数据，此现象也称之为<strong>脏读</strong>。<ul>
+<li>脏读就是指当一个事务正在访问数据，并且对数据进行了修改，而这种修改还没有提交到数据库中，这时，另外一个事务也访问这个数据，然后使用了这个数据。</li>
+</ul>
+</li>
+<li>READ COMMITTED（读提交）：一个事务可以读取另一个已提交的事务，多次读取会造成不一样的结果，此现象称为<strong>不可重复读</strong>问题，Oracle 和 SQL Server 的默认隔离级别。<ul>
+<li>不可重复读是指在一个事务内，多次读同一数据。<strong>在这个事务还没有结束时</strong>，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的的数据可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。（即不能读到相同的数据内容）</li>
+</ul>
+</li>
+<li>REPEATABLE READ（可重复读）：该隔离级别是 MySQL 默认的隔离级别，在同一个事务里，<strong><code>select</code> 的结果是事务开始时时间点的状态</strong>，因此，同样的 <code>select</code> 操作读到的结果会是一致的，但是，会有<strong>幻读</strong>现象。MySQL 的 InnoDB 引擎可以通过 <code>next-key locks</code> 机制来避免幻读。</li>
+<li>SERIALIZABLE（序列化）：在该隔离级别下事务都是串行顺序执行的，MySQL 数据库的 InnoDB 引擎会给读操作隐式加一把读共享锁，从而避免了脏读、不可重读复读和幻读问题。</li>
+</ul>
+<h4 id="参考资料-1"><a href="#参考资料-1" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://www.ibm.com/developerworks/cn/opensource/os-mysql-transaction-isolation-levels-and-locks/index.html" target="_blank" rel="noopener">Mysql事物隔离级别</a></p>
+<p><a href="https://blog.csdn.net/JIESA/article/details/51317164" target="_blank" rel="noopener">数据库事务隔离级别– 脏读、幻读、不可重复读（清晰解释）</a></p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>索引可以大幅增加数据库的查询的性能，在实际业务场景中，或多或少都会使用到。但是索引也是有代价的，首先需要额外的磁盘空间来保存索引；其次，对于插入、更新、删除等操作由于更新索引会增加额外的开销，因此索引比较适合用在读多写少的场景。</p>
+<p>索引是数据库中非常非常重要的概念，它是存储引擎能够快速定位记录的秘密武器，对于提升数据库的性能、减轻数据库服务器的负担有着非常重要的作用；<strong>索引优化是对查询性能优化的最有效手段</strong>，它能够轻松地将查询的性能提高几个数量级。</p>
+<h4 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h4><ul>
+<li><p>唯一索引，就是索引列中的值必须是唯一的，但是允许出现空值。这种索引一般用来保证数据的唯一性，比如保存账户信息的表，每个账户的 ID 必须保证唯一，如果重复插入相同的账户 ID 时  MySQL 返回异常。</p>
+</li>
+<li><p>主键索引是一种特殊的唯一索引，但是它不允许出现空值。</p>
+</li>
+<li><p>普通索引，与唯一索引不同，它允许索引列中存在相同的值。例如学生的成绩表，各个学科的分数是允许重复的，就可以使用普通索引。</p>
+</li>
+<li><p>联合索引，就是由多个列共同组成的索引。一个表中含有多个单列的索引并不是联合索引，联合索引是对多个列字段按顺序共同组成一个索引。应用联合索引时需要注意最左原则，就是 where 查询条件中的字段必须与索引字段从左到右进行匹配。比如，一个用户信息表，用姓名和年龄组成了联合索引，如果查询条件是“姓名等于张三“，那么满足最左原则；如果查询条件是“年龄大于 20“，由于索引中最左的字段是姓名不是年龄，所以不能使用这个索引。</p>
+</li>
+<li><p>全文索引，前面提到了，MyISAM 引擎中实现了这个索引，在 5.6 版本后 InnoDB 引擎也支持了全文索引，并且在 5.7.6 版本后支持了中文索引。全文索引只能在 CHAR、VARCHAR、TEXT 类型字段上使用，底层使用倒排索引实现。要注意对于大数据量的表，生成全文索引会非常消耗时间也非常消耗磁盘空间。</p>
+</li>
+</ul>
+<h4 id="索引的实现"><a href="#索引的实现" class="headerlink" title="索引的实现"></a>索引的实现</h4><ul>
+<li>B+ 树实现，B+ 树比较适合用作 &gt; 或 &lt; 这样的范围查询，是 MySQL 中最常使用的一种索引实现。</li>
+<li>R-Tree 是一种用于处理多维数据的数据结构，可以对地理数据进行空间索引。不过实际业务场景中使用的比较少。</li>
+<li>Hash 是使用散列表来对数据进行索引，Hash 方式不像 B-Tree 那样需要多次查询才能定位到记录，因此 Hash 索引的效率高于 B-Tree，但是不支持范围查找和排序等功能。实际使用的也比较少。</li>
+<li>FullText 就是前面提到的全文索引，是一种记录关键字与对应文档关系的倒排索引。</li>
+</ul>
+<h4 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h4><ol>
+<li>如果条件中有 or，即使其中有条件带索引也不会使用。要想使用or，又想让索引生效，只能将 or 条件中的每个列都加上索引</li>
+<li>对于多列索引，不是使用的最左匹配，则不会使用索引。</li>
+<li>如果列类型是字符串，那一定要在条件中将数据使用引号引用起来，否则不使用索引。</li>
+<li>如果 mysql 估计使用全表扫描要比使用索引快，则不使用索引。例如，使用<code>&lt;&gt;</code>、<code>not in</code> 、<code>not</code> <code>exist</code>，对于这三种情况大多数情况下认为结果集很大，MySQL 就有可能不使用索引。</li>
+</ol>
+<h3 id="存储过程、函数"><a href="#存储过程、函数" class="headerlink" title="存储过程、函数"></a>存储过程、函数</h3><ul>
+<li>MySQL 的存储过程与函数都可以避免开发人员重复编写相同的 SQL 语句，并且存储过程和函数都是在 MySQL 服务器中执行的，可以减少客户端和服务器端的数据传输。</li>
+<li>存储过程能够实现更复杂的功能，而函数一般用来实现针对性比较强的功能，例如特殊策略求和等。存储过程可以执行包括修改表等一系列数据库操作，而用户定义函数不能用于执行修改全局数据库状态的操作。</li>
+<li>存储过程一般是作为一个独立的部分来执行，而函数可以作为查询语句的一个部分来调用。SQL 语句中不能使用存储过程，但可以使用函数。存储过程一般与数据库实现绑定，使用存储过程会降低程序的可移植性，应谨慎使用。</li>
+</ul>
+<h3 id="数据库三范式"><a href="#数据库三范式" class="headerlink" title="数据库三范式"></a>数据库三范式</h3><ul>
+<li>第一范式（1NF）：数据库表中的字段都是单一属性的，不可再分<ul>
+<li>数据冗余，插入异常，删除异常，修改异常</li>
+</ul>
+</li>
+<li>第二范式（2NF）：数据库中是否存在非主属性对于码的部分函数依赖。若存在，即表示数据库最高只符合第一范式的要求，若不存在，则符合第二范式的要求。也即所有非主属性都完全函数依赖于码<ul>
+<li>插入异常，删除异常</li>
+</ul>
+</li>
+<li>第三范式（3NF）：在第二范式的基础上，消除了非主属性对于码的传递函数依赖。</li>
+</ul>
+<h4 id="码"><a href="#码" class="headerlink" title="码"></a>码</h4><p>通过一个或多个属性可以确定表里其他的所有属性，这样的一个组合就叫做码</p>
+<h4 id="主属性-非主属性"><a href="#主属性-非主属性" class="headerlink" title="主属性/非主属性"></a>主属性/非主属性</h4><ul>
+<li>主属性：码里的属性就是主属性</li>
+<li>非主属性：不是主属性的属性是非主属性</li>
+</ul>
+<h4 id="函数依赖"><a href="#函数依赖" class="headerlink" title="函数依赖"></a>函数依赖</h4><p>可以通过一个或多个属性确定其他的所有属性，那么可以说其他的属性函数依赖于这个属性</p>
+<h4 id="完全函数依赖"><a href="#完全函数依赖" class="headerlink" title="完全函数依赖"></a>完全函数依赖</h4><p>对于一个属性，它同时依赖于几个其他属性，称该属性完全函数依赖于其他的几个属性</p>
+<h4 id="部分函数依赖"><a href="#部分函数依赖" class="headerlink" title="部分函数依赖"></a>部分函数依赖</h4><p>对于一个属性函数依赖于其他属性，但不完全函数依赖于其他属性，称该属性为部分函数依赖</p>
+<h4 id="传递函数依赖"><a href="#传递函数依赖" class="headerlink" title="传递函数依赖"></a>传递函数依赖</h4><p>指的是如 果存在”A → B → C”（C依赖于B，B依赖于A）的决定关系，则C传递函数依赖于A。因此，满足第三范式的数据库表应该不存在如下依赖关系： 主属性 → 非主属性 x → 非主属性y</p>
+<h4 id="参考资料-2"><a href="#参考资料-2" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://www.bilibili.com/video/av17299750?from=search&seid=14526644812160665367" target="_blank" rel="noopener">数据库的三范式</a></p>
+<h3 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h3><p>一般 MySQL 调优有如下图所示的四个纬度</p>
+<p><img src="assets/image-20200221091131141.png" alt="image-20200221091131141"></p>
+<ul>
+<li>第一个纬度是针对数据库设计、表结构设计以及索引设置纬度进行的优化；</li>
+<li>第二个纬度是对我们业务中使用的 SQL 语句进行优化，例如调整 where 查询条件；</li>
+<li>第三个纬度是对 MySQL 服务的配置进行优化，例如对链接数的管理，对索引缓存、查询缓存、排序缓存等各种缓存大小进行优化；</li>
+<li>第四个纬度是对硬件设备和操作系统设置进行优化，例如调整操作系统参数、禁用 swap、增加内存、升级固态硬盘等等。</li>
+</ul>
+<p><img src="assets/image-20200221091244679.png" alt="image-20200221091244679"></p>
+<h4 id="表结构及索引优化"><a href="#表结构及索引优化" class="headerlink" title="表结构及索引优化"></a>表结构及索引优化</h4><ol>
+<li>要在设计表结构时，考虑数据库的水平与垂直扩展能力，提前规划好未来1年的数据量、读写量的增长，规划好分库分表方案。比如设计用户信息表，预计 1 年后用户数据 10亿 条，写 QPS 约 5000，读 QPS 30000，可以设计按 UID 纬度进行散列，分为 4 个库每个库 32 张表，单表数据量控制在 KW 级别。</li>
+<li>要为字段选择合适的数据类型，在保留扩展能力的前提下，优先选用较小的数据结构。例如保存年龄的字段，要使用 TINYINT 而不要使用 INT。</li>
+<li>可以将字段多的表分解成多个表，必要时增加中间表进行关联。假如一张表有 40～50 个字段显然不是一个好的设计。</li>
+<li>一般来说，设计关系数据库时需要满足第三范式，但为了满足第三范式，我们可能会拆分出多张表。而在进行查询时需要对多张表进行关联查询，有时为了提高查询效率，会降低范式的要求，在表中保存一定的冗余信息，也叫做反范式。但要注意反范式一定要适度。</li>
+<li>要擅用索引，比如为经常作为查询条件的字段创建索引、创建联合索引时要根据最左原则考虑索引的复用能力，不要重复创建索引；要为保证数据不能重复的字段创建唯一索引等等。不过要注意索引对插入、更新等写操作是有代价的，不要滥用索引，比如像性别这样唯一很差的字段就不适合建立索引。</li>
+<li>列字段尽量设置为 not null。MySQL 难以对使用 null 的列进行查询优化，允许 null 会使索引、索引统计和值更加复杂，允许 null 值的列需要更多的存储空间，还需要 MySQL 内部进行特殊处理。</li>
+</ol>
+<h4 id="Sql语句优化"><a href="#Sql语句优化" class="headerlink" title="Sql语句优化"></a>Sql语句优化</h4><ol>
+<li>要找到最需要优化的 SQL 语句。要么是使用最频繁的语句，要么是优化后提高最明显的语句，可以通过查询 MySQL 的慢查询日志来发现需要进行优化的 SQL 语句；</li>
+<li>要学会利用 MySQL 提供的分析工具。例如使用 Explain 来分析语句的执行计划，看看是否使用了索引，使用了哪个索引，扫描了多少记录，是否使用文件排序等等。或者利用 Profile 命令来分析某个语句执行过程中各个分步的耗时。</li>
+<li>要注意使用查询语句是要避免使用 SELECT *，而是应该指定具体需要获取的字段。原因一是可以避免查询出不需要使用的字段，二是可以避免查询列字段的元信息。</li>
+<li>是尽量使用 prepared statements，一个是它性能更好，另一个是可以防止 SQL 注入。</li>
+<li>是尽量使用索引扫描来进行排序，也就是尽量在有索引的字段上进行排序操作。</li>
+</ol>
+<h4 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h4><p><a href="https://doocs.github.io/advanced-java/#/?id=%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8" target="_blank" rel="noopener">https://doocs.github.io/advanced-java/#/?id=%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8</a></p>
+<h4 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h4><p><a href="https://doocs.github.io/advanced-java/#/./docs/high-concurrency/mysql-read-write-separation" target="_blank" rel="noopener">https://doocs.github.io/advanced-java/#/./docs/high-concurrency/mysql-read-write-separation</a></p>
+<h3 id="sql-语句"><a href="#sql-语句" class="headerlink" title="sql 语句"></a>sql 语句</h3><h4 id="工资第N高"><a href="#工资第N高" class="headerlink" title="工资第N高"></a>工资第N高</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select distinct(salary) from employee order by salary desc limit n-1, 1;</span><br></pre></td></tr></table></figure>
+
+<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>一个参数表示记录数 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 结果将会显示最高的两条记录</span><br><span class="line">SELECT DISTINCT( HourTime ),</span><br><span class="line">	ApllyName </span><br><span class="line">FROM</span><br><span class="line">	oanew </span><br><span class="line">ORDER BY</span><br><span class="line">	HourTime DESC </span><br><span class="line">	LIMIT 2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>两个参数表示范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 表示显示第二到第四个 等同于 limit 3 offest 1</span><br><span class="line">limit 1, 3</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数起始位置（0表示第一个），第二个参数表示记录数</p>
+<p>一个6亿的表a，一个3亿的表b，通过外间tid关联，你如何最快的查询出满足条件的第50000到第50200中的这200条数据记录。</p>
+<ul>
+<li>1、如果A表TID是自增长,并且是连续的,B表的ID为索引</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> a,b <span class="keyword">where</span> a.tid = b.id <span class="keyword">and</span> a.tid&gt;<span class="number">500000</span> <span class="keyword">limit</span> <span class="number">200</span>;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2、如果A表的TID不是连续的,那么就需要使用覆盖索引.TID要么是主键,要么是辅助索引,B表ID也需要有索引。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> b , (<span class="keyword">select</span> tid <span class="keyword">from</span> a <span class="keyword">limit</span> <span class="number">50000</span>,<span class="number">200</span>) a <span class="keyword">where</span> b.id = a .tid;</span><br></pre></td></tr></table></figure></div><div class="tags"></div><div class="post-nav"><a class="next" href="/2019/09/11/mybatis-plus%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/">mybatis-plus代码生成器</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://yoursite.com"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/11/18/mysql/">MySql</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/11/mybatis-plus%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/">mybatis-plus代码生成器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/25/kafka/">kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/02/mybatis%E6%A0%B9%E6%8D%AE%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%9F%E6%88%90%E5%AE%9E%E4%BD%93%E7%B1%BB/">mybatis根据数据库生成实体类</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/26/%E4%BB%8E%E5%9C%B0%E7%A3%85%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE/">从地磅获取数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/hexo%E6%90%AD%E5%BB%BA/">hexo搭建</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Links</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">huakaiMay.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
