@@ -91,6 +91,15 @@
 <li>存储过程能够实现更复杂的功能，而函数一般用来实现针对性比较强的功能，例如特殊策略求和等。存储过程可以执行包括修改表等一系列数据库操作，而用户定义函数不能用于执行修改全局数据库状态的操作。</li>
 <li>存储过程一般是作为一个独立的部分来执行，而函数可以作为查询语句的一个部分来调用。SQL 语句中不能使用存储过程，但可以使用函数。存储过程一般与数据库实现绑定，使用存储过程会降低程序的可移植性，应谨慎使用。</li>
 </ul>
+<h4 id="创建存储过程"><a href="#创建存储过程" class="headerlink" title="创建存储过程"></a>创建存储过程</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">create produce produce_name</span><br><span class="line">begin</span><br><span class="line">	语句</span><br><span class="line">end;</span><br><span class="line"></span><br><span class="line">exp:</span><br><span class="line">CREATE PROCEDURE productpricing()</span><br><span class="line">BEGIN</span><br><span class="line"> SELECT avg(prod_price) as avgprice from products;</span><br><span class="line">END;</span><br></pre></td></tr></table></figure>
+
+<h4 id="带有参数的存储过程"><a href="#带有参数的存储过程" class="headerlink" title="带有参数的存储过程"></a>带有参数的存储过程</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE  PROCEDURE productpricing1(</span><br><span class="line">OUT p1 DECIMAL(8, 2),</span><br><span class="line">out p2 decimal(8, 2),</span><br><span class="line">out p3 decimal(8, 4)</span><br><span class="line">)</span><br><span class="line">BEGIN</span><br><span class="line">    select Min(prod_price) into p1 from products ;</span><br><span class="line">	select Max(prod_price) into p2 from products;</span><br><span class="line">	select avg(prod_price) into p3 from products;</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">use:</span><br><span class="line">call productpricing1(@low, @high, @priceavg)</span><br><span class="line"></span><br><span class="line">select @low</span><br></pre></td></tr></table></figure>
+
+<h5 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h5><ul>
+<li>IN            把参数传递给存储过程</li>
+<li>OUT           从存储过程中传出参数</li>
+<li>INOUT       对存储过程传入和传出    </li>
+</ul>
 <h3 id="数据库三范式"><a href="#数据库三范式" class="headerlink" title="数据库三范式"></a>数据库三范式</h3><ul>
 <li>第一范式（1NF）：数据库表中的字段都是单一属性的，不可再分<ul>
 <li>数据冗余，插入异常，删除异常，修改异常</li>
@@ -138,7 +147,28 @@
 </ol>
 <h4 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h4><p><a href="https://doocs.github.io/advanced-java/#/?id=%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8" target="_blank" rel="noopener">https://doocs.github.io/advanced-java/#/?id=%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8</a></p>
 <h4 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h4><p><a href="https://doocs.github.io/advanced-java/#/./docs/high-concurrency/mysql-read-write-separation" target="_blank" rel="noopener">https://doocs.github.io/advanced-java/#/./docs/high-concurrency/mysql-read-write-separation</a></p>
-<h3 id="sql-语句"><a href="#sql-语句" class="headerlink" title="sql 语句"></a>sql 语句</h3><h4 id="工资第N高"><a href="#工资第N高" class="headerlink" title="工资第N高"></a>工资第N高</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select distinct(salary) from employee order by salary desc limit n-1, 1;</span><br></pre></td></tr></table></figure>
+<h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><p>为什么使用视图</p>
+<ul>
+<li>重用SQL语句</li>
+<li>简化复杂的SQL操作</li>
+<li>使用表的组成部分而不是整个表</li>
+<li>保护数据</li>
+<li>更改数据和格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 语法</span><br><span class="line">create view view_name as select ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="sql-语句"><a href="#sql-语句" class="headerlink" title="sql 语句"></a>sql 语句</h3><h4 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h4><p>两种基本情况需要使用组合查询：</p>
+<ul>
+<li>再单个查询中从不同的表返回类似结构的数据</li>
+<li>对单个表执行多个查询，按单个查询返回数据</li>
+</ul>
+<p>UNION从查询结果集中自动去除重复的行，如果想要所有的结果，使用UNION ALL</p>
+<h5 id="UNION-规则"><a href="#UNION-规则" class="headerlink" title="UNION 规则"></a>UNION 规则</h5><ul>
+<li>必须由两条以上的select语句组成</li>
+<li>UNION中的每个查询必须包含相同的列、表达式或聚集函数（列不需要相同的次序出现）</li>
+<li>列数据类型必须兼容（类型不必完全相同，但必须是数据库管理系统可以隐含地转换的类型）</li>
+</ul>
+<h4 id="工资第N高"><a href="#工资第N高" class="headerlink" title="工资第N高"></a>工资第N高</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select distinct(salary) from employee order by salary desc limit n-1, 1;</span><br></pre></td></tr></table></figure>
 
 <h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><p>一个参数表示记录数 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 结果将会显示最高的两条记录</span><br><span class="line">SELECT DISTINCT( HourTime ),</span><br><span class="line">	ApllyName </span><br><span class="line">FROM</span><br><span class="line">	oanew </span><br><span class="line">ORDER BY</span><br><span class="line">	HourTime DESC </span><br><span class="line">	LIMIT 2</span><br></pre></td></tr></table></figure>
