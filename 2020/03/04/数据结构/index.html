@@ -18,7 +18,7 @@
 <p>如果只发生对数组的访问，数组是表的一种恰当的实现，如果是对表进行插入或删除，尤其是对表的前端进行操作，那么数组就不是一种好的选择。</p>
 <h3 id="简单链表"><a href="#简单链表" class="headerlink" title="简单链表"></a>简单链表</h3><p><strong>不要求逻辑上相邻的两个元素物理上也相连</strong>，通过链建立起数据元素之间的逻辑关系<br><a href="https://www.zhihu.com/question/21318658/answer/63652147" target="_blank" rel="noopener">https://www.zhihu.com/question/21318658/answer/63652147</a></p>
 <p>为了避免插入和删除的线性开销，我们需要保证表可以<strong>不连续存储</strong>，否则<strong>表的每个部分可能都需要整体移动</strong></p>
-<p>链表由一系列节点组成，这些节点不必在内存中相连。每一个节点表元素以及包含该元素到后继节点的链(link)，称之为next链，最后一个节点的<code>next</code>链引用为<code>null</code></p>
+<p>链表由一系列节点组成，这些节点不必在内存中相连。每一个节点含有表元素以及包含该元素到后继节点的链(link)，称之为next链，最后一个节点的<code>next</code>链引用为<code>null</code></p>
 <p>为了执行<code>printList</code>需要从表的第一个节点开始用后继的<code>next</code>链遍历，这种操作是线性的</p>
 <p><code>remove</code>需要修改下一个<code>next</code>引用来完成</p>
 <p><img src="assets/image-20200304104657308.png" alt="image-20200304104657308"></p>
